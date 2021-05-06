@@ -2,7 +2,7 @@
 
 A Pytorch implementation of paper "**Unsupervised Hashing with Contrastive Information Bottleneck** "
 
-#### Main Dependencies
+### Main Dependencies
 
 - torch 1.4.0
 - torchvision 0.5.0
@@ -11,7 +11,7 @@ A Pytorch implementation of paper "**Unsupervised Hashing with Contrastive Infor
 
 
 
-#### Run
+### How to Run
 
 ```shell
 # Run with the Cifar10 dataset
