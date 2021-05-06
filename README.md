@@ -11,7 +11,7 @@ A Pytorch implementation of paper "**Unsupervised Hashing with Contrastive Infor
 
 
 
-##### Run
+#### Run
 
 ```shell
 # Run with the Cifar10 dataset
