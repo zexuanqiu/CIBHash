@@ -1,4 +1,4 @@
-## CIBHash
+# CIBHash
 
 A Pytorch implementation of paper "**Unsupervised Hashing with Contrastive Information Bottleneck** "
 
