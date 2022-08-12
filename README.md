@@ -15,7 +15,7 @@ A Pytorch implementation of paper "**Unsupervised Hashing with Contrastive Infor
 
 ```shell
 # Run with the Cifar10 dataset
-python main.py cifar16 --train --dataset cifar10 --encode_length 16 --cuda
+python main.py cifar10 --train --dataset cifar10 --encode_length 16 --cuda
 ```
 
 If you run the above command, the program will download the Cifar10 dataset to the directory `./data/cifar10/` and then start to train. 
