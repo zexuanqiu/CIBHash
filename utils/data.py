@@ -107,59 +107,56 @@ class MyTestDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
+
 def get_cifar():
     # Dataset
-    train_dataset = dsets.CIFAR10(root='./data/cifar10/',
-                                train=True,
-                                download=True)
+    train_dataset = dsets.CIFAR10(
+        root='./data/cifar10/',
+        train=True,
+        download=True
+    )
+    test_dataset = dsets.CIFAR10(
+        root='./data/cifar10/',
+        train=False
+    )
 
-    test_dataset = dsets.CIFAR10(root='./data/cifar10/',
-                                train=False
-                                )
-
-    database_dataset = dsets.CIFAR10(root='./data/cifar10/',
-                                    train=True
-                                    )
-
+    train_size = 5000
+    val_size = 500
+    test_size = 500
 
     # train with 5000 images
-    X = train_dataset.data
-    L = np.array(train_dataset.targets)
+    X = np.concatenate((train_dataset.data, test_dataset.data))
+    L = np.concatenate((np.array(train_dataset.targets), np.array(test_dataset.targets)))
 
     first = True
     for label in range(10):
         index = np.where(L == label)[0]
+
         N = index.shape[0]
-        prem = np.random.permutation(N)
-        index = index[prem]
-        
-        data = X[index[0:500]]
-        labels = L[index[0: 500]]
+        perm = np.random.permutation(N)
+        index = index[perm]
+
         if first:
-            Y_train = labels
-            X_train = data
+            val_index = index[:val_size]
+            test_index = index[val_size:val_size + test_size]
+            train_index = index[val_size + test_size: val_size + test_size + train_size]
+            database_index = index[val_size + test_size + train_size:]
         else:
-            Y_train = np.concatenate((Y_train, labels))
-            X_train = np.concatenate((X_train, data))
+            val_index = np.concatenate((val_index, index[:val_size]))
+            test_index = np.concatenate((test_index, index[val_size:val_size + test_size]))
+            train_index = np.concatenate((train_index, index[val_size + test_size: val_size + test_size + train_size]))
+            database_index = np.concatenate((database_index, index[val_size + test_size + train_size:]))
         first = False
 
-    Y_train = np.eye(10)[Y_train]
+    database_index = np.concatenate((train_index, database_index))  # DeepHash cifar10-2
 
-    
-    idxs = list(range(len(test_dataset.data)))
-    np.random.shuffle(idxs)
-    test_data = np.array(test_dataset.data)
-    test_tragets = np.array(test_dataset.targets)
-
-    X_val = test_data[idxs[:5000]]
-    Y_val = np.eye(10)[test_tragets[idxs[:5000]]]
-
-    X_test = test_data[idxs[5000:]]
-    Y_test = np.eye(10)[test_tragets[idxs[5000:]]]
-
-
-    X_database = database_dataset.data 
-    Y_database = np.eye(10)[database_dataset.targets]
+    X_train = X[train_index]
+    Y_train = np.eye(10)[L[train_index]]
+    X_val = X[val_index]
+    Y_val = np.eye(10)[L[val_index]]
+    X_test = X[test_index]
+    Y_test = np.eye(10)[L[test_index]]
+    X_database = X[database_index]
+    Y_database = np.eye(10)[L[database_index]]
 
     return X_train, Y_train, X_val, Y_val, X_test, Y_test, X_database, Y_database
-
